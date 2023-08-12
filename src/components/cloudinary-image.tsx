@@ -1,11 +1,12 @@
 "use client";
 import { CldImage, CldImageProps } from "next-cloudinary";
-import { Heart } from "../../components/icons/heart";
-import { FullHeart } from "../../components/icons/full-heart";
-import { setAsFavoriteAction } from "./actions";
+import { Heart } from "./icons/heart";
+import { FullHeart } from "./icons/full-heart";
+import { setAsFavoriteAction } from "../app/gallery/actions";
 import { useTransition } from "react";
-import { SearchResult } from "./page";
+import { SearchResult } from "../app/gallery/page";
 import { useState } from "react";
+import { ImageMenu } from "./image-menu";
 
 export function CloudinaryImage(
   props: {
@@ -23,7 +24,7 @@ export function CloudinaryImage(
       <CldImage {...props} src={imageData.public_id} />
       {isFavorited ? (
         <FullHeart
-          className="absolute top-2 right-2 hover:text-white text-red-500 cursor-pointer"
+          className="absolute top-2 left-2 hover:text-white text-red-500 cursor-pointer"
           onClick={() => {
             onUnheart?.(imageData);
             setIsFavorited(false);
@@ -34,7 +35,7 @@ export function CloudinaryImage(
         />
       ) : (
         <Heart
-          className="absolute top-2 right-2 hover:text-red-500 text-white cursor-pointer"
+          className="absolute top-2 left-2 hover:text-red-500 text-white cursor-pointer"
           onClick={() => {
             setIsFavorited(true);
             startTransition(() => {
@@ -43,6 +44,7 @@ export function CloudinaryImage(
           }}
         />
       )}
+      <ImageMenu />
     </div>
   );
 }
