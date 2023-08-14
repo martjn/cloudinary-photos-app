@@ -1,9 +1,11 @@
 import { ComponentProps } from "react";
 
 export function FullHeart(props: ComponentProps<"svg">) {
+  const {className} = props;
   return (
-    <div {...props}>
+    <div className={className}>
       <svg
+        {...props}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
