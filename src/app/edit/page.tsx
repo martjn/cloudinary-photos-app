@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { CldImage } from "next-cloudinary";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function EditPage({
   searchParams: { publicId },
@@ -9,8 +11,15 @@ export default function EditPage({
   searchParams: { publicId: string };
 }) {
   const [transformation, setTransformation] = useState<
-    undefined | "generative-fill" | "blur" | "grayscale" | "pixelate" | "remove-background"
+    | undefined
+    | "generative-fill"
+    | "blur"
+    | "grayscale"
+    | "pixelate"
+    | "remove-background"
   >();
+  const [prompt, setPrompt] = useState("");
+  const [pendingPrompt, setPendingPrompt] = useState("");
   return (
     <section>
       <div className="flex flex-col gap-8">
@@ -24,12 +33,20 @@ export default function EditPage({
           >
             Clear All
           </Button>
-          <Button onClick={() => setTransformation("generative-fill")}>
-            Apply Generative Fill
-          </Button>
-          <Button onClick={() => setTransformation("blur")}>
-            Blur image
-          </Button>
+          <div className="flex flex-col gap-4">
+            <Button onClick={() => {
+              setTransformation("generative-fill")
+              setPrompt(pendingPrompt)
+              }}>
+              Apply Generative Fill
+            </Button>
+            <Label>Prompt</Label>
+            <Input
+              value={pendingPrompt}
+              onChange={(e) => setPendingPrompt(e.currentTarget.value)}
+            />
+          </div>
+          <Button onClick={() => setTransformation("blur")}>Blur image</Button>
           <Button onClick={() => setTransformation("grayscale")}>
             Convert to gray
           </Button>
@@ -41,16 +58,18 @@ export default function EditPage({
           </Button>
         </div>
 
-        <div className="flex gap-12">
-          <CldImage src={publicId} width="400" height="400" alt="some image" />
+        <div className="grid grid-cols-2 gap-12">
+          <CldImage src={publicId} width="400" height="300" alt="some image" />
           {transformation === "generative-fill" && (
             <CldImage
               src={publicId}
-              width="400"
-              height="400"
+              width="1800"
+              height="1200"
               alt="some image"
               crop="pad"
-              fillBackground
+              fillBackground={{
+                prompt,
+              }}
             />
           )}
           {transformation === "blur" && (
@@ -60,7 +79,6 @@ export default function EditPage({
               height="400"
               blur="800"
               alt="some image"
-              
             />
           )}
           {transformation === "grayscale" && (
@@ -70,7 +88,6 @@ export default function EditPage({
               height="400"
               grayscale
               alt="some image"
-              
             />
           )}
           {transformation === "pixelate" && (
@@ -80,7 +97,6 @@ export default function EditPage({
               height="400"
               pixelate
               alt="some image"
-              
             />
           )}
           {transformation === "remove-background" && (
@@ -90,7 +106,6 @@ export default function EditPage({
               height="400"
               removeBackground
               alt="some image"
-              
             />
           )}
         </div>
